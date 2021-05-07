@@ -1,28 +1,10 @@
 {
   "tasks": [
     {
-      "id": 1,
-      "text": "Meeting with Project React",
-      "day": "May 11 @12:00am",
-      "reminder": true
-    },
-    {
-      "id": 2,
-      "text": "Help me with React My Reads",
-      "day": "May 11 @1:20am",
-      "reminder": false
-    },
-    {
-      "id": 3,
-      "text": "Brad Traversy is actually helping me",
-      "day": "May 11 @2:00am",
-      "reminder": true
-    },
-    {
-      "id": 4,
-      "text": "Submit My Reads before deadline",
-      "day": "May 11 @3:00am",
-      "reminder": false
+      "text": "Hobb bobba",
+      "day": "Friday",
+      "reminder": false,
+      "id": 1
     }
   ]
 }

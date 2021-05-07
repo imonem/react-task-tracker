@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "./components/Header";
 import Tasks from "./components/Tasks";
 import AddTask from "./components/AddTask";
@@ -7,31 +7,97 @@ function App() {
   const [showAddTask, setShowAddTask] = useState(false);
   const [tasks, setTasks] = useState([]);
 
-  //Add task
-  const addTask = (task) => {
-    const id = Math.floor(Math.random() * 10000) + 1;
+  //second method to fetch
+  useEffect(() => {
+    const getTasks = async () => {
+      const tasksFromServer = await fetchTasks();
+      setTasks(tasksFromServer);
+    };
 
-    const newTask = { id, ...task };
+    getTasks();
+  }, []);
 
-    setTasks([...tasks, newTask]);
+  // first method to fetch
+  // useEffect(() => {
+  //   fetchTasks().then((data) => setTasks(data));
+  // }, []);
+
+  //fetch tasks
+  const fetchTasks = async () => {
+    const res = await fetch("http://localhost:5000/tasks");
+    const data = await res.json();
+
+    return data;
   };
 
-  const deleteTask = (id) => {
+  //fetch task
+  const fetchTask = async (id) => {
+    const res = await fetch(`http://localhost:5000/tasks/${id}`);
+    const data = await res.json();
+
+    return data;
+  };
+
+  //Add task
+  const addTask = async (task) => {
+    const res = await fetch("http://localhost:5000/tasks", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/JSON",
+      },
+      body: JSON.stringify(task),
+    });
+    //Here, the data returned is the new added task and I want to update it on the frontend, so this is where setTasks get back in the game
+    //always remember your try/catch block and to ALWAYS 'await' Promises!!
+    try {
+      const data = await res.json();
+      setTasks([...tasks, data]);
+    } catch (error) {
+      console.log(error);
+    }
+
+    //Old add task - now using the persistent backend server
+    // const id = Math.floor(Math.random() * 10000) + 1;
+    // const newTask = { id, ...task };
+    // setTasks([...tasks, newTask]);
+  };
+  //delete task - added async/await for persistent deletes from backend server
+  const deleteTask = async (id) => {
+    await fetch(`http://localhost:5000/tasks/${id}`, {
+      method: "DELETE",
+    });
     setTasks(tasks.filter((task) => task.id !== id));
   };
 
-  const toggleReminder = (id) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, reminder: !task.reminder } : task
-      )
-    );
+  const toggleReminder = async (id) => {
+    const taskToToggle = await fetchTask(id);
+    const udpateTask = { ...taskToToggle, reminder: !taskToToggle.reminder };
+
+    const res = await fetch(`http://localhost:5000/tasks/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/JSON",
+      },
+      body: JSON.stringify(udpateTask),
+    });
+
+    try {
+      const data = await res.json();
+      //I want to only change the reminder status here and make it persist
+      setTasks(
+        tasks.map((task) =>
+          task.id === id ? { ...task, reminder: data.reminder } : task
+        )
+      );
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
-    <div className="container">
+    <div className='container'>
       <Header
-        title="Task Tracker"
+        title='Task Tracker'
         onAdd={() => setShowAddTask(!showAddTask)}
         showAdd={showAddTask}
       />
