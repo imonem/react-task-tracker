@@ -5,6 +5,18 @@
       "day": "Friday",
       "reminder": false,
       "id": 1
+    },
+    {
+      "text": "Happy Hunting",
+      "day": "Friday",
+      "reminder": false,
+      "id": 2
+    },
+    {
+      "text": "Friday is a great day",
+      "day": "Friday",
+      "reminder": true,
+      "id": 3
     }
   ]
 }
