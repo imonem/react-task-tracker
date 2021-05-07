@@ -1,16 +1,16 @@
-import {Button} from "./Button"
+import { Button } from "./Button";
 
-const Header = ({ title }) => {
-    const onClick = (e) => {
-    console.log("Clicked");
-  };
+const Header = ({ title, onAdd, showAdd }) => {
+  return (
+    <header className="header">
+      <h1>{title}</h1>
+      <Button
+        color={showAdd ? "blue" : "green"}
+        text={showAdd ? "Close" : "Add"}
+        onClick={onAdd}
+      />
+    </header>
+  );
+};
 
-    return (
-        <header className="header">
-            <h1>{title}</h1>
-            <Button color="green" text="Add" onClick={onClick} />
-        </header>
-    )
-}
-
-export default Header
+export default Header;
